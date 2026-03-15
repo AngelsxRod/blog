@@ -7,6 +7,7 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
@@ -17,10 +18,16 @@ import { User, UserDocument } from './schema/user.schema';
 
 @Injectable()
 export class UsersService {
+  private bcryptRounds: number;
+
   constructor(
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
-  ) {}
+    private configService: ConfigService,
+  ) {
+    this.bcryptRounds =
+      this.configService.get<number>('security.bcryptRounds') ?? 10;
+  }
 
   private async findUserOrFail(id: string): Promise<UserDocument> {
     const user = await this.userModel.findById(id);
@@ -41,7 +48,10 @@ export class UsersService {
       throw new ConflictException('Correo electrónico ya registrado');
     }
 
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      this.bcryptRounds,
+    );
 
     const user = new this.userModel({
       ...createUserDto,

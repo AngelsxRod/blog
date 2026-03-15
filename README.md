@@ -1,98 +1,388 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 📝 TodoList API - NestJS + MongoDB
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Una API REST completa para gestionar tareas (todos) construida con **NestJS**, **MongoDB** y **TypeScript**. Incluye autenticación, validaciones robustas, gestión de configuración y buenas prácticas de seguridad.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## ✨ Características
 
-## Description
+### 🔐 Seguridad
+- ✅ Hash de contraseñas con bcrypt
+- ✅ Validación de contraseñas fuertes (mayúscula, minúscula, número, carácter especial)
+- ✅ Validación automática de datos (DTOs con class-validator)
+- ✅ CORS configurable
+- ✅ Rate limiting
+- ✅ Variables de entorno para datos sensibles
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 📚 Gestión de Usuarios
+- ✅ Crear usuario (POST /users)
+- ✅ Listar usuarios (GET /users)
+- ✅ Obtener usuario (GET /users/:id)
+- ✅ Actualizar usuario (PATCH /users/:id)
+- ✅ Eliminar usuario (DELETE /users/:id)
+- ✅ Paginación automática
 
-## Project setup
+### 🎯 Validaciones
+- ✅ Email único y válido
+- ✅ Nombre sin caracteres especiales
+- ✅ Contraseña fuerte requerida
+- ✅ Actualización con al menos un campo
+- ✅ Validación de MongoDB ObjectIds
+- ✅ Validación de parámetros de paginación
 
+### ⚙️ Configuración
+- ✅ Sistema de variables de entorno
+- ✅ Múltiples configuraciones por entorno (dev, prod, test)
+- ✅ Validación automática de variables
+- ✅ Configuración centralizada
+
+### 📖 Documentación
+- ✅ Swagger/OpenAPI (habilitado en desarrollo)
+- ✅ Documentación de variables de entorno
+- ✅ Guía de configuración completa
+- ✅ Ejemplos de uso
+
+## 🚀 Inicio Rápido
+
+### Requisitos Previos
+
+- Node.js 18+ 
+- MongoDB (local o Atlas)
+- pnpm (recomendado) o npm
+
+### Instalación
+
+1. **Clonar el repositorio**
 ```bash
-$ pnpm install
+git clone <repo-url>
+cd todo-list
 ```
 
-## Compile and run the project
+2. **Ejecutar setup (automático)**
 
-```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+**Windows (PowerShell):**
+```powershell
+.\setup.ps1
 ```
 
-## Run tests
-
+**Linux/macOS:**
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+chmod +x setup.sh
+./setup.sh
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+**Manual:**
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+cp .env.example .env
+pnpm install
+pnpm run build
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+3. **Configurar variables de entorno**
 
-## Resources
+Editar `.env`:
+```env
+NODE_ENV=development
+DB_URI=mongodb://localhost:27017/todo-list
+APP_PORT=3000
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+4. **Iniciar servidor**
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+# Desarrollo (con autoreload)
+pnpm run start:dev
 
-## Support
+# Producción
+NODE_ENV=production pnpm run start:prod
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+5. **Acceder a la API**
 
-## Stay in touch
+```
+API: http://localhost:3000
+Swagger: http://localhost:3000/api
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 📋 Endpoints
 
-## License
+### Usuarios
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/users` | Listar usuarios (con paginación) |
+| POST | `/users` | Crear usuario |
+| GET | `/users/:id` | Obtener usuario por ID |
+| PATCH | `/users/:id` | Actualizar usuario |
+| DELETE | `/users/:id` | Eliminar usuario |
+
+### Parámetros de Query
+
+**GET /users:**
+```
+?page=1&limit=10
+```
+
+### Body Ejemplos
+
+**POST /users (Crear):**
+```json
+{
+  "name": "Juan Pérez",
+  "email": "juan@example.com",
+  "password": "SecurePass123!"
+}
+```
+
+**PATCH /users/:id (Actualizar):**
+```json
+{
+  "name": "Juan Carlos",
+  "email": "juan2@example.com"
+}
+```
+
+## 🔐 Requisitos de Validación
+
+### Email
+- ✅ Formato válido (RFC 5322)
+- ✅ Único en la base de datos
+- ✅ Se normaliza a minúsculas
+- ✅ Se eliminan espacios
+
+### Nombre
+- ✅ 2-50 caracteres
+- ✅ Solo letras y espacios
+- ✅ Se eliminan espacios al inicio/final
+
+### Contraseña
+- ✅ 8-100 caracteres
+- ✅ Al menos 1 mayúscula (A-Z)
+- ✅ Al menos 1 minúscula (a-z)
+- ✅ Al menos 1 número (0-9)
+- ✅ Al menos 1 carácter especial (@$!%*?&)
+- ✅ Se hashea con bcrypt (10 rounds en dev, 12 en prod)
+
+**Ejemplos de contraseña:**
+- ✅ Válida: `SecurePass123!`
+- ❌ Inválida: `password` (sin mayúsculas, números ni especiales)
+- ❌ Inválida: `Pass1!` (menos de 8 caracteres)
+
+## 📁 Estructura del Proyecto
+
+```
+src/
+├── config/                      # Configuración centralizada
+│   ├── app.config.ts           # Objeto de configuración
+│   ├── env.validation.ts       # Validación de variables
+│   └── index.ts
+├── common/
+│   ├── pipes/                  # Pipes personalizados
+│   │   ├── parse-mongo-id.pipe.ts
+│   │   ├── pagination.pipe.ts
+│   │   └── index.ts
+│   └── validators/             # Validadores personalizados
+│       ├── is-not-empty-update.validator.ts
+│       └── index.ts
+├── users/                       # Módulo de usuarios
+│   ├── dto/                    # Data Transfer Objects
+│   │   ├── create-user.dto.ts
+│   │   └── update-user.dto.ts
+│   ├── schema/                 # Esquemas de MongoDB
+│   │   └── user.schema.ts
+│   ├── users.service.ts        # Lógica de negocio
+│   ├── users.controller.ts     # Endpoints HTTP
+│   └── users.module.ts
+├── app.module.ts               # Módulo principal
+├── app.controller.ts
+├── app.service.ts
+└── main.ts                     # Punto de entrada
+
+# Archivos de configuración
+.env                            # Configuración local (NO commitar)
+.env.example                    # Plantilla (commitar)
+.env.development                # Configuración de desarrollo
+.env.production                 # Configuración de producción
+.env.testing                    # Configuración de testing
+```
+
+## 🌍 Variables de Entorno
+
+Ver documentación completa en `ENVIRONMENT_CONFIG_GUIDE.md`
+
+### Principales
+
+```env
+# Aplicación
+NODE_ENV=development
+APP_NAME=TodoList
+APP_PORT=3000
+APP_HOST=localhost
+
+# Base de datos
+DB_URI=mongodb://localhost:27017/todo-list
+DB_NAME=todo-list
+
+# Seguridad
+BCRYPT_ROUNDS=10
+
+# Swagger
+SWAGGER_ENABLED=true
+SWAGGER_PATH=/api
+
+# CORS
+CORS_ENABLED=true
+CORS_ORIGIN=http://localhost:3000
+
+# Rate Limiting
+RATE_LIMIT_ENABLED=true
+RATE_LIMIT_MAX=100
+
+# Logging
+LOG_LEVEL=debug
+```
+
+## 📦 Scripts Disponibles
+
+```bash
+# Desarrollo
+pnpm run start:dev          # Iniciar con autoreload
+pnpm run start:debug        # Iniciar en modo debug
+
+# Producción
+pnpm run build              # Compilar TypeScript
+pnpm run start:prod         # Ejecutar producción
+
+# Utilidades
+pnpm run lint               # Ejecutar ESLint
+pnpm run format             # Formatear código (Prettier)
+pnpm test                   # Ejecutar tests
+pnpm test:watch             # Tests en modo watch
+pnpm test:cov               # Tests con coverage
+```
+
+## 🧪 Testing
+
+```bash
+# Ejecutar tests
+pnpm test
+
+# Tests en modo watch
+pnpm test:watch
+
+# Tests con cobertura
+pnpm test:cov
+```
+
+## 🐳 Docker
+
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN pnpm install
+COPY . .
+RUN pnpm run build
+EXPOSE 3000
+CMD ["node", "dist/main.js"]
+```
+
+**Build y run:**
+```bash
+docker build -t todo-list .
+docker run -e NODE_ENV=production -e DB_URI=mongodb://... -p 3000:3000 todo-list
+```
+
+## 🚀 Despliegue
+
+### Vercel
+1. Conectar repositorio a Vercel
+2. Agregar variables de entorno en Settings → Environment Variables
+3. Deploy automático
+
+### Railway
+1. Conectar repositorio
+2. Agregar variables en project settings
+3. Deploy automático
+
+### Heroku (deprecated pero aún funciona)
+1. `heroku create`
+2. `heroku config:set NODE_ENV=production DB_URI=...`
+3. `git push heroku main`
+
+## 📝 Logs Iniciales
+
+Cuando la aplicación inicia, muestra:
+
+```
+✅ TodoList v1.0.0 iniciado en http://localhost:3000
+📝 Entorno: development
+🔌 Base de datos: mongodb://localhost:27017/todo-list
+📚 Swagger disponible en http://localhost:3000/api
+```
+
+## 🔍 Solución de Problemas
+
+### Error: "DB connection refused"
+```bash
+# Verificar MongoDB está ejecutándose
+mongod
+# O usar MongoDB Atlas con URI en .env
+```
+
+### Error: "PORT already in use"
+```bash
+# Cambiar puerto en .env
+APP_PORT=3001
+```
+
+### Error: "Invalid environment variable"
+```bash
+# Verificar .env tiene todas las variables requeridas
+cp .env.example .env
+# Y actualizar con tus valores
+```
+
+### Tests fallan
+```bash
+# Usar .env.testing
+NODE_ENV=testing pnpm test
+```
+
+## 📚 Tecnologías
+
+- **Framework:** NestJS 11.x
+- **BD:** MongoDB + Mongoose 9.x
+- **Validación:** class-validator, class-transformer
+- **Seguridad:** bcrypt 6.x
+- **TypeScript:** 5.7.x
+- **Testing:** Jest 30.x
+- **Linting:** ESLint 9.x
+- **Formateado:** Prettier 3.x
+
+## 📖 Documentación Adicional
+
+- [NestJS Docs](https://docs.nestjs.com)
+- [Mongoose Docs](https://mongoosejs.com)
+- [class-validator](https://github.com/typestack/class-validator)
+- [bcrypt npm](https://www.npmjs.com/package/bcrypt)
+
+## 📄 Licencia
+
+UNLICENSED
+
+## 👨‍💻 Contribuciones
+
+Las contribuciones son bienvenidas. Por favor:
+
+1. Fork el repositorio
+2. Crear rama para tu feature (`git checkout -b feature/amazing`)
+3. Commit cambios (`git commit -m 'Add amazing feature'`)
+4. Push a la rama (`git push origin feature/amazing`)
+5. Abrir Pull Request
+
+## 📞 Soporte
+
+Para reportar bugs o solicitar features, crear un issue en el repositorio.
+
+---
+
+**Construido con ❤️ usando NestJS**

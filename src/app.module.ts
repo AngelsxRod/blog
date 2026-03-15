@@ -1,14 +1,27 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
+import { appConfig, validateEnvironment } from './configs';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb://root:admin@localhost:27017/appdb?authSource=admin',
-    ),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env'],
+      load: [appConfig], // Carga la configuración desde appConfig
+      validate: validateEnvironment, // Valida las variables de entorno usando la función validateEnvironment
+      cache: true,
+    }),
+    MongooseModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('database.uri'),
+        dbName: configService.get<string>('database.name'),
+      }),
+    }),
     UsersModule,
   ],
   controllers: [AppController],
