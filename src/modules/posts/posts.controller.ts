@@ -1,6 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PostsService } from './posts.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
+import { PostsService } from './posts.service';
+import { PaginationPipe, ParseMongoIdPipe } from '@common/pipes';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('posts')
@@ -13,22 +23,27 @@ export class PostsController {
   }
 
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  findAll(
+    @Query(PaginationPipe) query: { page: number; limit: number; skip: number },
+  ) {
+    return this.postsService.findAll(query);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(+id);
+  findOne(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.postsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(+id, updatePostDto);
+  update(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
+    return this.postsService.update(id, updatePostDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postsService.remove(+id);
+  remove(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.postsService.remove(id);
   }
 }

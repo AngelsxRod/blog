@@ -1,26 +1,117 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreatePostDto } from './dto/create-post.dto';
+import { Post, PostDocument } from './schema/post.schema';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostsService {
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
+  constructor(@InjectModel(Post.name) private postModel: Model<PostDocument>) {}
+
+  private async findPostOrFail(id: string): Promise<PostDocument> {
+    const post = await this.postModel.findById(id);
+
+    if (!post) {
+      throw new NotFoundException('Publicacion no encontrada');
+    }
+
+    return post;
   }
 
-  findAll() {
-    return `This action returns all posts`;
+  async create(createPostDto: CreatePostDto): Promise<Post> {
+    const existingPost = await this.postModel.findOne({
+      slug: createPostDto.slug,
+    });
+
+    if (existingPost) {
+      throw new ConflictException('El slug ya está en uso');
+    }
+
+    const post = new this.postModel(createPostDto);
+
+    return post.save();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findAll({
+    page,
+    limit,
+    skip,
+  }: {
+    page: number;
+    limit: number;
+    skip: number;
+  }) {
+    if (page < 1 || limit < 1) {
+      throw new BadRequestException(
+        'Los parámetros de paginación deben ser mayores a 0',
+      );
+    }
+
+    const posts = await this.postModel
+      .find({ status: true })
+      .select('-content')
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    const total = await this.postModel.countDocuments({ status: true });
+
+    return {
+      data: posts,
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+    };
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async findOne(id: string) {
+    const post = await this.findPostOrFail(id);
+    return post;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async update(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
+    if (Object.keys(updatePostDto).length === 0) {
+      throw new BadRequestException(
+        'Debe proporcionar al menos un campo para actualizar',
+      );
+    }
+
+    await this.findPostOrFail(id);
+
+    if (updatePostDto.slug) {
+      const slugExists = await this.postModel.findOne({
+        slug: updatePostDto.slug,
+        _id: { $ne: id },
+      });
+
+      if (slugExists) {
+        throw new ConflictException('El slug ya está en uso');
+      }
+    }
+
+    const post = await this.postModel.findByIdAndUpdate(id, updatePostDto, {
+      new: true,
+    });
+
+    if (!post) {
+      throw new NotFoundException('Publicacion no encontrada');
+    }
+
+    return post;
+  }
+
+  async remove(id: string) {
+    const user = await this.findPostOrFail(id);
+    user.status = false;
+
+    await user.save();
+
+    return user;
   }
 }
