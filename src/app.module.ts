@@ -3,8 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './modules/users/users.module';
 import { appConfig, validateEnvironment } from './configs';
+import { PostsModule } from './modules/posts/posts.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { appConfig, validateEnvironment } from './configs';
       }),
     }),
     UsersModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -118,7 +118,7 @@ export class UsersService {
       }
     }
 
-    const updateData: Record<string, unknown> = { ...updateUserDto };
+    const updateData: Record<string, unknown> = { ...updateUserDto }; // Copia de los datos a actualizar y record sirve para evitar mutar el DTO original
 
     if (updateUserDto.password) {
       updateData.password = await bcrypt.hash(updateUserDto.password, 10);

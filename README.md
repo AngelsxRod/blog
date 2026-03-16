@@ -53,7 +53,7 @@ Una API REST completa para gestionar tareas (todos) construida con **NestJS**, *
 1. **Clonar el repositorio**
 ```bash
 git clone <repo-url>
-cd todo-list
+cd blog
 ```
 
 2. **Ejecutar setup (automático)**
@@ -81,7 +81,7 @@ pnpm run build
 Editar `.env`:
 ```env
 NODE_ENV=development
-DB_URI=mongodb://localhost:27017/todo-list
+DB_URI=mongodb://localhost:27017/blog
 APP_PORT=3000
 ```
 
@@ -218,8 +218,8 @@ APP_PORT=3000
 APP_HOST=localhost
 
 # Base de datos
-DB_URI=mongodb://localhost:27017/todo-list
-DB_NAME=todo-list
+DB_URI=mongodb://localhost:27017/blog
+DB_NAME=blog
 
 # Seguridad
 BCRYPT_ROUNDS=10
@@ -287,8 +287,8 @@ CMD ["node", "dist/main.js"]
 
 **Build y run:**
 ```bash
-docker build -t todo-list .
-docker run -e NODE_ENV=production -e DB_URI=mongodb://... -p 3000:3000 todo-list
+docker build -t blog .
+docker run -e NODE_ENV=production -e DB_URI=mongodb://... -p 3000:3000 blog
 ```
 
 ## 🚀 Despliegue
@@ -315,7 +315,7 @@ Cuando la aplicación inicia, muestra:
 ```
 ✅ TodoList v1.0.0 iniciado en http://localhost:3000
 📝 Entorno: development
-🔌 Base de datos: mongodb://localhost:27017/todo-list
+🔌 Base de datos: mongodb://localhost:27017/blog
 📚 Swagger disponible en http://localhost:3000/api
 ```
 

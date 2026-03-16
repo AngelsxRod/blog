@@ -7,8 +7,8 @@ export const appConfig = () => ({
     host: process.env.APP_HOST || 'localhost',
   },
   database: {
-    uri: process.env.DB_URI || 'mongodb://localhost:27017/todo-list',
-    name: process.env.DB_NAME || 'todo-list',
+    uri: process.env.DB_URI || 'mongodb://localhost:27017/blog',
+    name: process.env.DB_NAME || 'blog',
   },
   security: {
     bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS || '10', 10),
