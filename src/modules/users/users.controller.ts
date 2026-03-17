@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 
 import { UsersService } from './users.service';
@@ -18,11 +20,13 @@ import { ParseMongoIdPipe, PaginationPipe } from '@common/pipes';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get()
   findAll(
     @Query(PaginationPipe) query: { page: number; limit: number; skip: number },
@@ -30,11 +34,13 @@ export class UsersController {
     return this.usersService.findAll(query);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
   findOne(@Param('id', ParseMongoIdPipe) id: string) {
     return this.usersService.findOne(id);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Patch(':id')
   update(
     @Param('id', ParseMongoIdPipe) id: string,
@@ -43,6 +49,7 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   remove(@Param('id', ParseMongoIdPipe) id: string) {
     return this.usersService.remove(id);

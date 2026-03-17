@@ -24,7 +24,7 @@ export class PostsService {
     return post;
   }
 
-  async create(createPostDto: CreatePostDto): Promise<Post> {
+  async create(createPostDto: CreatePostDto): Promise<PostDocument> {
     const existingPost = await this.postModel.findOne({
       slug: createPostDto.slug,
     });
@@ -46,7 +46,12 @@ export class PostsService {
     page: number;
     limit: number;
     skip: number;
-  }) {
+  }): Promise<{
+    data: PostDocument[];
+    total: number;
+    page: number;
+    pages: number;
+  }> {
     if (page < 1 || limit < 1) {
       throw new BadRequestException(
         'Los parámetros de paginación deben ser mayores a 0',
@@ -70,12 +75,15 @@ export class PostsService {
     };
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<PostDocument> {
     const post = await this.findPostOrFail(id);
     return post;
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
+  async update(
+    id: string,
+    updatePostDto: UpdatePostDto,
+  ): Promise<PostDocument> {
     if (Object.keys(updatePostDto).length === 0) {
       throw new BadRequestException(
         'Debe proporcionar al menos un campo para actualizar',
@@ -106,7 +114,7 @@ export class PostsService {
     return post;
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<PostDocument> {
     const user = await this.findPostOrFail(id);
     user.status = false;
 

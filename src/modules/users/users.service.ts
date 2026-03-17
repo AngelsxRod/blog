@@ -69,7 +69,12 @@ export class UsersService {
     page: number;
     limit: number;
     skip: number;
-  }) {
+  }): Promise<{
+    data: UserDocument[];
+    total: number;
+    page: number;
+    pages: number;
+  }> {
     if (page < 1 || limit < 1) {
       throw new BadRequestException(
         'Los parámetros de paginación deben ser mayores a 0',
