@@ -12,6 +12,8 @@ export const appConfig = () => ({
   },
   security: {
     bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS || '10', 10),
+    jwtSecret: process.env.JWT_SECRET || 'your_jwt_secret',
+    expiresIn: process.env.EXPIRES_IN || 3600,
   },
   swagger: {
     enabled: process.env.SWAGGER_ENABLED === 'true',

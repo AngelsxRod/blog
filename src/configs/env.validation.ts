@@ -38,6 +38,12 @@ class EnvironmentVariables {
   @IsNumber()
   BCRYPT_ROUNDS: number;
 
+  @IsString()
+  JWT_SECRET: string;
+
+  @IsNumber()
+  EXPIRES_IN: number;
+
   @IsBoolean()
   SWAGGER_ENABLED: boolean;
 

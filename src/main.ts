@@ -2,6 +2,7 @@ import { ValidationPipe, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,7 +17,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
-
+  app.use(helmet());
   // Configurar CORS si está habilitado
   if (configService.get<boolean>('cors.enabled')) {
     app.enableCors({

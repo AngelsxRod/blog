@@ -39,7 +39,7 @@ export class UsersService {
     return user;
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<UserDocument> {
     const existingUser = await this.userModel.findOne({
       email: createUserDto.email,
     });
@@ -93,12 +93,15 @@ export class UsersService {
     };
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne(id: string): Promise<UserDocument> {
     const user = await this.findUserOrFail(id);
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserDocument> {
     if (Object.keys(updateUserDto).length === 0) {
       throw new BadRequestException(
         'Debe proporcionar al menos un campo para actualizar',
@@ -135,11 +138,21 @@ export class UsersService {
     return updatedUser;
   }
 
-  async remove(id: string): Promise<User> {
+  async remove(id: string): Promise<UserDocument> {
     const user = await this.findUserOrFail(id);
 
     user.status = false;
     await user.save();
+
+    return user;
+  }
+
+  async findByEmail(email: string): Promise<UserDocument> {
+    const user = await this.userModel.findOne({ email, status: true });
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
 
     return user;
   }
