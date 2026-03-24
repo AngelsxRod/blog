@@ -14,9 +14,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async singIn(
-    signInAuthDto: SignInAuthDto,
-  ): Promise<{ access_token: string }> {
+  async singIn(signInAuthDto: SignInAuthDto): Promise<string> {
     const user = await this.userService.findByEmail(signInAuthDto.email);
 
     const isMatch = await bcrypt.compare(signInAuthDto.password, user.password);
@@ -26,8 +24,7 @@ export class AuthService {
     }
 
     const payload = { sub: user._id, email: user.email };
-    return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
+
+    return await this.jwtService.signAsync(payload);
   }
 }

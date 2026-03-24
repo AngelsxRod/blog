@@ -1,31 +1,25 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Post, Body, Res } from '@nestjs/common';
+import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { SignInAuthDto } from './dto/signIn-auth.dto';
-import { JwtAuthGuard } from '@common/guards';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @HttpCode(HttpStatus.OK)
-  @Post('signin')
-  signIn(@Body() signInAuthDto: SignInAuthDto) {
-    return this.authService.singIn(signInAuthDto);
-  }
+  @Post('login')
+  async login(@Body() signInAuthDto: SignInAuthDto, @Res() res: Response) {
+    const token = await this.authService.singIn(signInAuthDto);
 
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req): any {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    return req.user;
+    res.cookie('access_token', token, {
+      httpOnly: true,
+      secure: false, // ⚠️ true en producción (HTTPS)
+      sameSite: 'lax',
+      maxAge: 24000 * 60 * 60, // 24 horas en milisegundos
+    });
+
+    return res.json({
+      message: 'Login exitoso',
+    });
   }
 }
